@@ -43,7 +43,7 @@ KC_GRV,   KC_1,         KC_2,     KC_3,     KC_4,      KC_5,      KC_6,         
 KC_TAB,   KC_Q,         KC_W,     KC_E,     KC_R,      KC_T,      KC_LBRC,      KC_RBRC,  KC_Y,      KC_U,         KC_I,     KC_O,         KC_P,     KC_BSLS,
 KC_ESC,   KC_A,         KC_S,     KC_D,     KC_F,      KC_G,      KC_HOME,      KC_DEL,   KC_H,      KC_J,         KC_K,     KC_L,         KC_SCLN,  KC_QUOT,
 KC_LSFT,  KC_Z,         KC_X,     KC_C,     KC_V,      KC_B,      KC_END,       KC_RSFT,  KC_N,      KC_M,         KC_COMM,  KC_DOT,       KC_SLSH,  KC_ENT,
-KC_LCTL,  KC_LGUI,      MO(1),    MO(2),    TO(1),     KC_LALT,   KC_SPC,       KC_SPC,   MO(1),     TO(4),        KC_LEFT,  KC_DOWN,      KC_UP,    KC_RGHT),
+KC_LCTL,  KC_LGUI,      MO(1),    MO(2),    TO(1),     MT(MOD_LALT, KC_ESC),   KC_SPC,       KC_SPC,   MO(1),     TO(4),        KC_LEFT,  KC_DOWN,      KC_UP,    KC_RGHT),
 
 	[_FN] = LAYOUT_ortho_5x14(
 KC_TRNS,  KC_F1,        KC_F2,    KC_F3,    KC_F4,     KC_F5,     KC_F6,        KC_F7,    KC_F8,     KC_F9,        KC_F10,   KC_F11,       KC_F12,   KC_TRNS,
@@ -73,6 +73,37 @@ KC_TRNS,  KC_A,         KC_H,     KC_J,     KC_K,      KC_L,      KC_TRNS,      
 KC_TRNS,  KC_TRNS,      KC_TRNS,  KC_TRNS,  KC_TRNS,   KC_TRNS,   KC_TRNS,      KC_TRNS,  KC_TRNS,   KC_TRNS,      KC_COMM,  KC_DOT,       KC_SLSH,  KC_ENT,
 KC_TRNS,  KC_TRNS,      KC_TRNS,  KC_TRNS,  TO(0),     KC_TRNS,   KC_TRNS,      KC_TRNS,  KC_TRNS,   TO(3),        KC_LEFT,  KC_DOWN,      KC_UP,    KC_RGHT)
 };
+
+// register combo_events
+// ZC will trigger CTRL SHIFT C
+// XV will trigger CTRL SHIFT V
+enum combo_events {
+  ZC_COPY,
+  XV_PASTE
+};
+
+const uint16_t PROGMEM copy_combo[] = {KC_Z, KC_C, COMBO_END};
+const uint16_t PROGMEM paste_combo[] = {KC_X, KC_V, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+  [ZC_COPY] = COMBO_ACTION(copy_combo),
+  [XV_PASTE] = COMBO_ACTION(paste_combo),
+};
+
+void process_combo_event(uint8_t combo_index, bool pressed) {
+  switch(combo_index) {
+    case ZC_COPY:
+      if (pressed) {
+        tap_code16(LCTL(LSFT(KC_C)));
+      }
+      break;
+    case XV_PASTE:
+      if (pressed) {
+        tap_code16(LCTL(LSFT(KC_V)));
+      }
+      break;
+  }
+}
 
 // RGB
 // RGB Modes
